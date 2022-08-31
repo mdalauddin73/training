@@ -1,0 +1,194 @@
+
+Configuring SSH on R1
+
+R1#conf t
+R1(config)#hostname R1
+
+R1(config-if)#ip address 192.168.1.100 255.255.255.0
+R1(config-if)#no shutdown 
+
+R1#conf t
+R1(config)#ip domain name ccn.com
+R1(config)#username ccn password ccn1234
+R1(config)#enable secret cisco
+
+R1(config)#crypto key generate rsa general-keys modulus 1024
+The name for the keys will be: R1.ccn.com
+% The key modulus size is 1024 bits
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+*Mar  1 00:31:38.815: %SSH-5-ENABLED: SSH 1.99 has been enabled
+R1(config)#
+
+R1(config)#ip ssh version 2
+R1(config)#ip ssh authentication-retries 3
+
+R1(config)#line vty 0 1340
+R1(config-line)#login local 
+R1(config-line)#transport input ssh telnet
+(if you want to prevent telnet connection just don't entry telnet) 
+R1(config-line)#exit
+
+++++++++++++++++++++++++++++++++++++
+Configuring Router as a DHCP Server
+++++++++++++++++++++++++++++++++++++
+R1 
+=====
+R1#conf t
+R1(config)#int f0/0
+R1(config-if)#ip address 192.168.0.100 255.255.255.0
+R1(config-if)#no shutdown 
+
+R1(config)#hostname DHCP-Server
+
+DHCP-Server(config)#ip dhcp excluded-address 192.168.0.100
+DHCP-Server(config)#ip dhcp excluded-address 192.168.0.1 192.168.0.10
+DHCP-Server(config)#ip dhcp excluded-address 192.168.0.20 192.168.0.21
+
+DHCP-Server(config)#ip dhcp pool CCN
+DHCP-Server(dhcp-config)#network 192.168.0.0 255.255.255.0
+DHCP-Server(dhcp-config)#default-router 192.168.0.100
+DHCP-Server(dhcp-config)#dns-server 192.168.0.20
+DHCP-Server(dhcp-config)#dns-server 192.168.0.21
+DHCP-Server(dhcp-config)#end
+
+PC-1 (Virtual PC)
+=================
+PC-1> ip dhcp
+
+MicroCore Linux
+================
+root@box:/home/gns3# udhcpc -r --
+
+WinXP 0n VMware
+================
+Obtain an IP address automatically
+
+R2
+===
+R2(config)#int f0/0
+R2(config-if)#ip address dhcp
+R2(config-if)#no shutdown 
+
+SW-2
+=====
+SW-2(config)#int e0/0
+SW-2(config-if)#no switchport 
+SW-2(config-if)#ip address dhcp 
+SW-2(config-if)#no shutdown 
+SW-2(config-if)#exit
+SW-2(config)#
+
+End of Configuring 
+
+
+++++++++++++++++++++++++++++++++++++
+Configuring DHCP ip helper-address 
+++++++++++++++++++++++++++++++++++++
+R1 
+=====
+DHCP-Server(config)#int f0/1
+DHCP-Server(config-if)#ip address 192.168.13.1 255.255.255.0
+DHCP-Server(config-if)#no shutdown
+DHCP-Server(config-if)#exit
+
+DHCP-Server(config)#ip dhcp pool DHCP-IPHelper
+DHCP-Server(dhcp-config)#network 172.15.1.0 255.255.255.0
+DHCP-Server(dhcp-config)#default-router 172.15.1.3
+DHCP-Server(dhcp-config)#dns-server 192.168.0.20 192.168.0.21
+DHCP-Server(dhcp-config)#end
+
+
+R3
+===
+R3(config)#int f0/1
+R3(config-if)#ip address 192.168.13.3 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+
+R3(config)#int f0/0
+R3(config-if)#ip address 172.15.1.3 255.255.255.0
+R3(config-if)#no shutdown 
+R3(config-if)#ip helper-address 192.168.13.1
+
+
+PC-2 (Virtual PC)
+=================
+PC-2> ip dhcp
+
+End of Configuration
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+IP Services - Router as a DHCPv6 Server (STATELESS)
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+R1
+====
+R1#conf t
+R1(config)#ipv6 unicast-routing 
+
+R1(config)#int f0/0
+R1(config-if)#ipv6 address fe80::1 link-local 
+R1(config-if)#no shutdown 
+
+R1(config)#ipv6 dhcp pool STATELESS
+R1(config-dhcpv6)#dns-server 5::5
+R1(config-dhcpv6)#domain-name ccn.local
+
+R1(config)#int f0/0
+R1(config-if)#ipv6 address 2001:111:111:111::1/64
+R1(config-if)#ipv6 dhcp  server STATELESS
+R1(config-if)#ipv6 nd other-config-flag 
+R1(config-if)#no shutdown
+
+R2
+===
+
+R2#conf t
+R2(config)#ipv6 unicast-routing 
+
+R2(config)#int f0/0  
+R2(config-if)#ipv6 address autoconfig 
+R2(config-if)#no shutdown 
+ 
+ 
++++++++++++++++++++++++++++++++++++++++++++++++++++
+IP Services - Router as a DHCPv6 Server (STATEFUL)
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+R1
+====
+R1#conf t
+R1(config)#ipv6 unicast-routing 
+R1(config)#int f0/0
+R1(config-if)#ipv6 address fe80::2 link-local 
+R1(config-if)#no shutdown 
+R1(config-if)#exit
+
+R1(config)#ipv6 dhcp pool STATEFUL
+R1(config-dhcpv6)#address prefix 2001:222:222:222::0/64
+R1(config-dhcpv6)#dns-server 6::6
+R1(config-dhcpv6)#domain-name ccn.local
+R1(config-dhcpv6)#exit
+
+R1(config)#int f0/0
+R1(config-if)#ipv6 dhcp server STATEFUL
+R1(config-if)#ipv6 nd managed-config-flag 
+R1(config-if)#ipv6 nd prefix 2001:222:222:222::0/64 28800 14400 no-autoconfig
+
+R2
+===
+R2#conf t
+R2(config)#int f0/0
+R2(config-if)#ipv6 enable 
+R2(config-if)#ipv6 address dhcp 
+
+
+PC-2 (Virtual PC)
+=================
+PC-2> ip auto
+
+
+End of Configuration
+
+
+ 

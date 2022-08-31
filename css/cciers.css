@@ -1,0 +1,139 @@
+figcaption {
+	font-size: 18px;
+	font-weight:bold;
+	color:red;
+	}
+h1 {
+	font-size: 28px;
+	line-height:1.6;
+	font-weight:bold;
+}
+h2 {
+	background-color:yellow;
+	font-size: 20px;
+	line-height:1.6;
+	color:blue;
+	font-weight:bold;
+	padding:5px;
+}
+h3 {
+	font-size: 18px;
+	line-height:1.6;
+	font-weight:bold;
+}
+h4 {
+	font-size: 16px;
+	line-height:1.3;
+	font-weight:bold;
+}
+/*ul {
+    list-style: square inside url("bullet-1.png");
+}
+ul li{
+	color:red;
+	font-weight:bold;
+	line-height:1.3;
+}*/
+ol.ol-wb{
+    list-style: square inside url("bullet-1.png");
+}
+ol li.li-wb{
+	color:teal;
+	font-weight:bold;
+	line-height:1.4;
+	font-family:"Calibri", Geneva, sans-serif;
+	}
+font {
+	line-height:1.1;
+}
+.note-head {
+	color:#2196F3;
+	font-weight:bold;
+	font-size:21px;
+	line-height:1.3;
+}
+.note-text {
+	color:#131516;
+	/*font-weight:bold;*/
+	background: url('../images/bullet-2.png');
+	background-repeat:no-repeat;
+	background-position:5px 7px;
+	padding-left:20px;
+	line-height:1.5;
+	font-family:"Roboto", Geneva, sans-serif;
+	font-size:13px;
+	text-align:justify;
+}
+.note-subtext{
+	color:#131516;
+	padding-left:43px;
+	background-image: url('../images/bullet-3.png');
+	background-position: 30px 5px;
+    background-repeat: no-repeat;
+	font-family:"Calibri", Geneva, sans-serif;
+	font-size:14px;
+	line-height:1.5;
+	text-align:justify;
+	text-justify:inter-word;
+}
+#config{
+	font-family:"Courier New";
+	font-size:14px;
+}
+.command{
+	color:red;
+}
+.command2{
+	color:blue;
+	font-weight:bold;
+}
+textarea { 
+	resize: none;
+	font-family:"Courier New";
+	font-size:12px;
+	background-color: #f2f4f4;
+	border:none;
+}
+
+.cli-output-notice{
+	color:red;
+	font-weight:bold;
+	font-family:"Courier New",Geneva, sans-serif;
+	font-size:14px;
+}
+/*ol li #ref01 {
+	
+	color:red;
+}*/
+
+.task-head {
+	color:red;
+	font-weight:bold;
+	font-size:21px;
+	/*line-height:1.3;*/
+}
+.task-text {
+	color:teal;
+	/*font-weight:bold;*/
+	background: url('../images/bullet-1.png');
+	background-repeat:no-repeat;
+	background-position:5px 7px;
+	padding-left:20px;
+	font-size:16px;
+	text-align:justify;
+	font-weight:bold;
+	line-height:1.2;
+	font-family:"Calibri", Geneva, sans-serif;
+}
+.task-subtext{
+	color:#131516;
+	padding-left:43px;
+	background-image: url('../images/bullet-3.png');
+	background-position: 30px 5px;
+    background-repeat: no-repeat;
+	font-family:"Calibri", Geneva, sans-serif;
+	font-size:14px;
+	line-height:1.5;
+	text-align:justify;
+	text-justify:inter-word;
+}
